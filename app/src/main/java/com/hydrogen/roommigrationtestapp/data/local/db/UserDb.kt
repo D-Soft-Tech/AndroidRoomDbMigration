@@ -1,13 +1,15 @@
 package com.hydrogen.roommigrationtestapp.data.local.db
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.hydrogen.roommigrationtestapp.data.local.dao.UserDao
 import com.hydrogen.roommigrationtestapp.data.local.entities.User
-import com.hydrogen.roommigrationtestapp.data.local.migrations.DbMigrations.MIGRATION_1_2
+import com.hydrogen.roommigrationtestapp.data.local.migrations.DbMigrations
+import com.hydrogen.roommigrationtestapp.data.local.migrations.DbMigrations.MIGRATION_2_3
 import com.hydrogen.roommigrationtestapp.data.local.typeConverters.UserDbTypeConverter
 import com.hydrogen.roommigrationtestapp.utils.AppUtils.APP_DB_NAME
 import com.hydrogen.roommigrationtestapp.utils.AppUtils.APP_DB_VERSION
@@ -16,6 +18,13 @@ import com.hydrogen.roommigrationtestapp.utils.AppUtils.APP_DB_VERSION
     entities = [User::class],
     version = APP_DB_VERSION,
     exportSchema = true,
+    autoMigrations = [
+        AutoMigration(
+            from = (APP_DB_VERSION - 1),
+            to = APP_DB_VERSION,
+            spec = DbMigrations.DeleteColumnSpec::class
+        )
+    ]
 )
 @TypeConverters(
     UserDbTypeConverter::class
@@ -29,7 +38,6 @@ abstract class UserDb : RoomDatabase() {
 
         fun getDbInstance(context: Context): UserDb = synchronized(this) {
             INSTANCE ?: Room.databaseBuilder(context, UserDb::class.java, APP_DB_NAME)
-                .addMigrations(MIGRATION_1_2)
                 .build()
                 .also {
                     INSTANCE = it

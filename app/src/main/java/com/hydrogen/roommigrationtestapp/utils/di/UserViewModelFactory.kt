@@ -10,9 +10,10 @@ class UserViewModelFactory(private val context: Context) : ViewModelProvider.Fac
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         val saveUserUseCase = AppManualModule.providesSaveUserUseCase(context)
+        val retrieveUserUseCase = AppManualModule.providesRetrieveSavedUsersUseCase(context)
         val ioDispatcher = AppManualModule.providesIoDispatcher()
         if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
-            return UserViewModel(saveUserUseCase, ioDispatcher) as T
+            return UserViewModel(saveUserUseCase, retrieveUserUseCase, ioDispatcher) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel Class")
         }

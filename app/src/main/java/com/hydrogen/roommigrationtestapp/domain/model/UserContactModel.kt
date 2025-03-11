@@ -5,5 +5,6 @@ data class UserContactModel(
     val name: String,
     val address: String,
     val phoneNumber: String,
-    val age: Int
+    val age: Int,
+    val ageTimes2: Int
 )

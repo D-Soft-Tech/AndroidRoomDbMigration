@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class SaveUserUseCase(private val userRepo: UserContract) {
 
     fun invoke(userName: String, userAddress: String, userPhoneNumber: String, age: Int): Flow<Int> {
-        val user = UserContactModel(null, userName, userAddress, userPhoneNumber, age)
+        val user = UserContactModel(null, userName, userAddress, userPhoneNumber, age, (age*2))
         return userRepo.save(user)
     }
 }
